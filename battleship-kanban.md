@@ -9,9 +9,6 @@ kanban-plugin: board
 - [ ] **BS-14** End-to-end deploy + verify
 	CDK deploy, upload frontend to S3, smoke test both modes.
 	Blocked by: BS-08, BS-09, BS-12, BS-13 [[task-descriptions/BS-14-e2e-deploy|details]]
-- [ ] **BS-22** CloudFront HTTPS distribution
-	Add CloudFront in CDK for HTTPS frontend. Fixes clipboard API, security.
-	Blocked by: BS-05 [[task-descriptions/BS-22-cloudfront-https|details]]
 
 
 ## TODO
@@ -20,20 +17,22 @@ kanban-plugin: board
 
 ## In Progress
 
-
-## QA
-
-- [ ] **BS-30** Rematch button broken (at least vs AI)
-	Clicking Rematch after game over doesn't work. Needs browser console investigation.
-	Blocked by: none [[task-descriptions/BS-30-rematch-broken|details]]
 - [ ] **BS-29** Join flow UX polish
 	Accept full game URL in join input. Change "Waiting for opponent to join" → "Waiting for opponent to place ships" once P2 joins.
 	Blocked by: BS-19 [[task-descriptions/BS-29-join-flow-polish|details]]
-- [ ] **BS-27** Spectator view for non-participants
-	View any game without a token. Neutral labels ("Player 1 / Player 2", "Winner / Loser"). Read-only boards. Bug fixed.
-	Blocked by: BS-24 [[task-descriptions/BS-27-spectator-view|details]]
+
+
+## QA
+
 
 ## Complete
+
+- [x] **BS-30** Rematch button broken (at least vs AI)
+	Clicking Rematch after game over doesn't work. Needs browser console investigation.
+	Blocked by: none [[task-descriptions/BS-30-rematch-broken|details]]
+- [x] **BS-27** Spectator view for non-participants
+	View any game without a token. Neutral labels ("Player 1 / Player 2", "Winner / Loser"). Read-only boards.
+	Blocked by: BS-24 [[task-descriptions/BS-27-spectator-view|details]]
 
 - [x] **BS-26** Placement screen UX polish
 	Mode-aware banner ("Playing against AI" vs share link), placement instructions, "Waiting for opponent..." after confirm.
