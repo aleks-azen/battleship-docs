@@ -16,11 +16,11 @@ We run a multi-agent workflow with defined roles:
 
 **Worker agents** — each owns one repo at a time. They read the task description, read the `.claude/rules/` for their repo, implement, self-review, and report back. Fresh context per task — no stale assumptions carrying over.
 
-**Local debugging agent** — runs in parallel with implementation agents, zero file conflicts. Stands up DynamoDB Local + a JDK HttpServer wrapper so we can test the full stack locally as changes land. This closes the feedback loop: agents implement, we verify locally, file bugs, agents fix.
+**Project status agent** — the user's direct collaborator for architecture decisions, edge case analysis, task refinement, Kanban management, and documentation. Maintains the audit log and writeups. Never writes implementation code.
 
-**Brainstorming agent** — the user's direct collaborator for architecture decisions, edge case analysis, task refinement, and documentation. Never writes implementation code.
+**DevOps agent** — runs in parallel with implementation agents, zero file conflicts. Stands up the local dev environment, handles deployment, and runs verification. Closes the feedback loop: agents implement, we verify locally, file bugs, agents fix.
 
-The loop: **plan → delegate → implement → QA → verify locally → file bugs → fix → repeat**. At peak, 5 agents running concurrently.
+The loop: **plan → delegate → implement → QA → verify locally → file bugs → fix → repeat**. At peak, 6 agents running concurrently.
 
 ---
 
@@ -59,11 +59,17 @@ The Kanban board is the single source of truth. Bugs get filed as tickets with t
 
 This isn't a demo that happens to work. It's a production application that happens to be a demo.
 
-- **Data lifecycle is handled.** Active games auto-expire via DynamoDB TTL after 24 hours — no orphaned state accumulating. Completed games persist without TTL for the history feature. No manual cleanup, no cron jobs.
+- **Data lifecycle is handled.** Active games auto-expire via DynamoDB TTL after 24 hours — no orphaned state accumulating. Completed games get a 7-day TTL — long enough for history review, then cleaned up automatically. No manual intervention, no cron jobs.
 - **Infrastructure is stage-aware.** CDK constructs are parameterized by stage. Adding a production account is one entry in `constants.ts` and a deploy command. Same constructs, same code, different config.
 - **Developer onboarding is immediate.** `./dev.sh` starts DynamoDB Local + the backend. `npm run dev` starts the frontend with API proxying. Full local stack in under a minute. No AWS credentials needed for development.
 - **Operational concerns are addressed.** Server-side validation on every mutation. Anti-cheat filtering on every response. Reserved concurrency for safe request serialization. Structured logging. The architecture doc captures what's implemented and what the production path looks like for each tradeoff (e.g., ADR-09 explains the move from in-memory locking to DynamoDB conditional writes).
 - **Bug discovery is systematic.** When 13 API contract mismatches were found between frontend and backend, they were cataloged in one document, turned into two tickets (adapter layer + backend enrichment), and assigned to agents. No ad-hoc debugging sessions — just tasks on a board.
+
+## Code Quality Without Reading Code
+
+I did not read implementation code during the build. The agents wrote it, the QA loop (`/simplify` + `/cr`) reviewed it, and I verified behavior through the local stack. After everything was complete, I did a final pass over the three repos and was genuinely satisfied with the result — the code is clean, well-structured, and easy to follow for a project of this scope. That's not an accident; it's the `.claude/rules/` files doing their job. When every agent follows the same conventions (package layout, naming, error handling, CORS headers), the output is consistent even across independent sessions.
+
+---
 
 ## What This Demonstrates
 

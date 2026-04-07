@@ -23,6 +23,9 @@ kanban-plugin: board
 
 ## QA
 
+- [ ] **BS-30** Rematch button broken (at least vs AI)
+	Clicking Rematch after game over doesn't work. Needs browser console investigation.
+	Blocked by: none [[task-descriptions/BS-30-rematch-broken|details]]
 - [ ] **BS-29** Join flow UX polish
 	Accept full game URL in join input. Change "Waiting for opponent to join" → "Waiting for opponent to place ships" once P2 joins.
 	Blocked by: BS-19 [[task-descriptions/BS-29-join-flow-polish|details]]

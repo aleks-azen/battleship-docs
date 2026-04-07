@@ -41,8 +41,9 @@ For those who want to go deeper into the process:
 
 ## Quick Stats
 
+- **~3 hours** total time from blank slate to deployed application
 - **20+ tasks** completed across 3 repos
-- **5 agents** running concurrently at peak (coordinator, 3 workers, brainstorm/debug)
+- **6 agents** running concurrently at peak (project status, coordinator, 3 workers, DevOps)
 - **13 integration bugs** found and resolved systematically via adapter pattern
 - **9 architectural decisions** documented with rationale
 - **0 manual infrastructure** — fully IaC via CDK, one-command deploy
