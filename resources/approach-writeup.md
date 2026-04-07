@@ -1,10 +1,16 @@
 # Battleship — Approach & AI Usage
 
+> **[Known Issues](known-issues.md)** — Lambda reserved concurrency quota pending (race condition edge case in multiplayer). See details.
+
 ## The Spike
 
 The goal was to demonstrate two things simultaneously: **sound architecture decisions** and **AI-accelerated delivery**. Not one or the other — both, reinforcing each other.
 
-The key insight: AI agents are only as good as the instructions they receive. Time invested in architecture, task descriptions, and rules files pays back exponentially when you're running 3-5 agents in parallel. Bad instructions at scale just produce bad code faster.
+**I did not read a single line of implementation code until the project was complete.** The first hour was entirely planning — aligning on requirements, making architecture decisions, writing detailed task descriptions, and bootstrapping the repos with `.claude/rules/` files and a coordinator prompt. No implementation. The rules and skills I used here (project decomposition, agent coordination, QA loops, code review prompts) aren't new — I've developed and refined them across previous projects. This was execution of a proven workflow, not experimentation.
+
+That's why I was comfortable being hands-off during implementation. The rules had already been vetted. The task descriptions were detailed enough to stand alone. The QA loop catches what I would catch in a code review. My role during the build was requirements, architecture, and verification — not writing or reading code. After the agents finished, I did a final pass across all three repos and was genuinely happy with the output: clean, consistent, easy to follow.
+
+**The only barrier to delivery is definition.** Once requirements are clear and the agentic workflow is set up, execution is fast. The ~3 hours included the planning — the implementation itself ran in parallel across 6 agents with minimal intervention.
 
 ---
 
@@ -64,12 +70,6 @@ This isn't a demo that happens to work. It's a production application that happe
 - **Developer onboarding is immediate.** `./dev.sh` starts DynamoDB Local + the backend. `npm run dev` starts the frontend with API proxying. Full local stack in under a minute. No AWS credentials needed for development.
 - **Operational concerns are addressed.** Server-side validation on every mutation. Anti-cheat filtering on every response. Reserved concurrency for safe request serialization. Structured logging. The architecture doc captures what's implemented and what the production path looks like for each tradeoff (e.g., ADR-09 explains the move from in-memory locking to DynamoDB conditional writes).
 - **Bug discovery is systematic.** When 13 API contract mismatches were found between frontend and backend, they were cataloged in one document, turned into two tickets (adapter layer + backend enrichment), and assigned to agents. No ad-hoc debugging sessions — just tasks on a board.
-
-## Code Quality Without Reading Code
-
-I did not read implementation code during the build. The agents wrote it, the QA loop (`/simplify` + `/cr`) reviewed it, and I verified behavior through the local stack. After everything was complete, I did a final pass over the three repos and was genuinely satisfied with the result — the code is clean, well-structured, and easy to follow for a project of this scope. That's not an accident; it's the `.claude/rules/` files doing their job. When every agent follows the same conventions (package layout, naming, error handling, CORS headers), the output is consistent even across independent sessions.
-
----
 
 ## What This Demonstrates
 
